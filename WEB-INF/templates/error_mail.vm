@@ -1,0 +1,12 @@
+<html>
+
+    <body>
+        <h2>${project_title} - Um erro inesperado ocorreu em ${date_now}</h2>
+
+        <p>${description}</p>
+
+        <p>Atenciosamente,</p>
+
+        <p>Suporte ${project_title}</p>
+    </body>
+</html>

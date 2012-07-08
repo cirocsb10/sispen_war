@@ -1,0 +1,21 @@
+<html>
+
+<body>
+    <h2>${project_title}</h2>
+    <h3>Mensagem automatica</h3>
+
+    <p>Dados de Acesso</p>
+
+    <p>URL: <strong>${project_url}</strong></p>
+
+    <p>Login: <strong>${username}</strong></p>
+    <p>Senha: <strong>${password}</strong></p>
+    <p>Perfil: <strong>${profile}</strong></p>
+
+    <p>Protega seus dados de acesso.</p>
+
+    <p>Atenciosamente,</p>
+
+    <p>Suporte ${project_title}</p>
+</body>
+</html>

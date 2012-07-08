@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/default.xhtml">
+
+    <ui:define name="title">
+        <h1>Remissões da Pena por Estudo</h1>
+    </ui:define>
+
+    <ui:define name="list-msg">
+        <h:panelGroup id="list-msg-info" layout="block" class="alert alert-success center hide list-msg">
+            <strong>Informação:  </strong>
+            <h:outputText id="msg-info" value="" />
+        </h:panelGroup>
+
+        <h:panelGroup id="list-msg-warn" layout="block" class="alert alert-error center hide list-msg">
+            <strong>Atenção:  </strong>
+            <h:outputText id="msg-warn" value="" />
+        </h:panelGroup>
+    </ui:define>
+
+    <ui:define name="table-content">
+
+        <f:metadata>
+            <f:viewParam name="success" value="#{remissionByEducationController.success}" />
+        </f:metadata>
+
+        <p:dataTable id="dataTable"
+                     styleClass="table"
+                     lazy="true"
+                     filterEvent="enter"
+                     var="model"
+                     value="#{remissionByEducationController.remissionsByEducation}"
+                     resizableColumns="true"
+                     paginator="true"
+                     rows="10"
+                     rowKey="#{model.id}"
+                     paginatorPosition="bottom"
+                     tableStyle="width:100%"
+                     emptyMessage="Sua busca não retornou resultados"
+                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+
+            <p:column id="prisoner" headerText="Presidiário:" filterBy="#{model.prisoner.name}">
+                <h:outputText value="#{model.prisoner.name}" />
+            </p:column>
+
+            <p:column id="name" headerText="Curso:" filterBy="#{model.name}">
+                <h:outputText value="#{model.name}" />
+            </p:column>
+
+            <p:column id="workload" headerText="Carga Horária:" filterBy="#{model.workload}" styleClass="center">
+                <h:outputText value="#{model.workload}" />
+            </p:column>
+
+            <p:column id="init_date" headerText="Início em:" filterBy="#{model.initDate}" styleClass="center">
+                <h:outputText value="#{model.initDate}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputText>
+            </p:column>
+
+            <p:column id="finish_date" headerText="Término em:" filterBy="#{model.finishDate}" styleClass="center">
+                <h:outputText value="#{model.finishDate}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Opções" resizable="false" styleClass="option-column">
+                <h:form styleClass="form-options">
+                    <p:commandLink styleClass="btn btn-edit icon-option" oncomplete="dlg.show()" action="#{remissionByEducationController.edit(model.id)}" update=":dialog" title="Editar">
+                        <h:outputText value="" styleClass="icon-edit"/>
+                        <f:setPropertyActionListener target="#{remissionByEducationController.remissionByEducation}" value="#{model}" />
+                    </p:commandLink>
+
+                    <p:commandLink styleClass="btn btn-delete icon-option" onclick="deleteConfirmation.show()" title="Excluir">
+                        <h:outputText value="" styleClass="icon-trash"/>
+                        <f:setPropertyActionListener target="#{remissionByEducationController.remissionByEducation}" value="#{model}" />
+                    </p:commandLink>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+
+        <p:blockUI block="dataTable" trigger="dataTable">
+            LOADING<br />
+            <p:graphicImage value="/img/ajax-loader.gif"/>
+        </p:blockUI>
+
+        <h:form prependId="false">
+            <p:confirmDialog id="deleteConfirmDialog" message="Você deseja realmente excluir o registro?" header="Exclusão de Registro" severity="alert" widgetVar="deleteConfirmation">
+                <p:commandLink id="confirm" styleClass="btn btn-primary white" value="Sim" update=":dataTable" oncomplete="handleRequest(xhr, status, args); deleteConfirmation.hide()" action="#{remissionByEducationController.delete}" />
+                <p:commandLink id="decline" styleClass="btn btn-no" value="Não" onclick="deleteConfirmation.hide()" type="button" />
+            </p:confirmDialog>
+        </h:form>
+
+        <p:dialog id="dialog" header="Cadastro" closable="false" modal="true" draggable="false" resizable="false" width="395" widgetVar="dlg">
+            <h:panelGroup id="dialog-msg" layout="block" styleClass="dialog-msg alert alert-error center hide">
+                <strong>Atenção:  </strong>
+                <h:outputText id="msg-error" styleClass="msg-error" value="" />
+            </h:panelGroup>
+
+            <h:form id="form-register">
+                <table id="grid-form" cellpadding="2" class="grid-form" border="0">
+                    <tbody>
+                    <tr>
+                        <td class="right"><h:outputLabel for="j_prisoner_1" value="Prisioneiro: *" /></td>
+                        <td><h:outputText id="j_prisoner_1" value="#{remissionByEducationController.remissionByEducation.prisoner.name}" maxlength="50" /></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td class="right"><h:outputLabel for="j_name" value="Curso: *" /></td>
+                        <td><h:inputText id="j_name" value="#{remissionByEducationController.remissionByEducation.name}" maxlength="50" /></td>
+                        <td><p:watermark for="j_name" value="Digite o nome do curso"/></td>
+                    </tr>
+
+                    <tr>
+                        <td class="right"><h:outputLabel for="j_workload" value="Carga Horária: *" /></td>
+                        <td><h:inputText id="j_workload" styleClass="numeric" value="#{remissionByEducationController.remissionByEducation.workload}" maxlength="50" /></td>
+                        <td><p:watermark for="j_workload" value="Digite a carga horária"/></td>
+                    </tr>
+
+                    <tr>
+                        <td class="right"><h:outputLabel for="j_initDate" value="Data de Início: *" /></td>
+                        <td><p:calendar id="j_initDate" styleClass="date" value="#{remissionByEducationController.remissionByEducation.initDate}" navigator="true" pattern="dd/MM/yyyy" yearRange="-111:+2" readonlyInput="true" /></td>
+                        <td><p:watermark for="j_initDate" value="Digite a data de início"/></td>
+                    </tr>
+
+                    <tr>
+                        <td class="right"><h:outputLabel for="j_finishDate" value="Data de Término: *" /></td>
+                        <td><p:calendar id="j_finishDate" styleClass="date" value="#{remissionByEducationController.remissionByEducation.finishDate}" navigator="true" pattern="dd/MM/yyyy" yearRange="-111:+2" readonlyInput="true" /></td>
+                        <td><p:watermark for="j_finishDate" value="Digite a data de término"/></td>
+                    </tr>
+
+                    <tr>
+                        <td class="right grid-form-td">
+                            <p:commandLink id="btn-create" styleClass="btn btn-create btn-submit btn-primary top" action="#{remissionByEducationController.save}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                                <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Salvar" styleClass="icon-ok icon-white white"/>
+                            </p:commandLink>
+                        </td>
+                        <td>
+                            <p:commandLink id="btn-cancel" styleClass="btn btn-cancel" action="#{remissionByEducationController.cancel}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                                <h:outputText value="Cancelar"/>
+                            </p:commandLink>
+                        </td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </h:form>
+
+            <!-- Format fields  -->
+            <script type="text/javascript">
+                $('.numeric').numeric();
+                $('input').removeClass('ui-inputfield ui-widget ui-state-default ui-corner-all');
+            </script>
+            <!-- Format fields -->
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/reports.xhtml">
+
+    <ui:define name="report-head">
+
+        <script type="text/javascript">
+            var chart;
+
+            $(function () {
+                $(document).ready(function() {
+                    chart = new Highcharts.Chart({
+                        chart: {
+                            renderTo: 'container',
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            events: {
+                                load: fetchChartData
+                            }
+                        },
+                        title: {
+                            text: 'Sexo'
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            }
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            type: 'pie',
+                            name: 'Browser share',
+                            data: []
+                        }]
+                    });
+                });
+
+            });
+        </script>
+
+    </ui:define>
+
+    <ui:define name="title">
+        <h1>Agrupamento por sexo</h1>
+    </ui:define>
+
+    <ui:define name="report-content">
+
+        <h:form>
+            <p:remoteCommand name="fetchChartData" actionListener="#{reportController.sexes}" oncomplete="updateChartData(xhr, status, args);"/>
+        </h:form>
+
+        <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+    </ui:define>
+
+</ui:composition>
+
+</html>

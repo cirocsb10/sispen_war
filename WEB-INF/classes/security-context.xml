@@ -1,0 +1,52 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+						http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<sec:global-method-security pre-post-annotations="enabled"/>
+
+    <sec:http auto-config="true" access-denied-page="/403.jsf" use-expressions="true">
+        <sec:intercept-url pattern="/" access="isAnonymous()"/>
+        <sec:intercept-url pattern="/login.jsf" access="isAnonymous()"/>
+        <sec:intercept-url pattern="/pages/index.jsf" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/academic_formations/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/driving_licences/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/handicaps/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/languages/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/municipalities/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/prison_units/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/professions/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/races/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/reports/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/sexual_orientations/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/pages/users/**" access="hasAnyRole('ROLE_ADMIN')" />
+        <sec:intercept-url pattern="/pages/prisoners/**" access="hasAnyRole('ROLE_ADMIN','ROLE_OPERATOR')" />
+        <sec:form-login login-page="/login.jsf" authentication-failure-handler-ref="authenticationFailureHandler" authentication-success-handler-ref="authenticationHandler" />
+        <sec:logout invalidate-session="true" logout-success-url="/" />
+    </sec:http>
+
+    <sec:authentication-manager>
+        <sec:authentication-provider>
+            <sec:password-encoder hash="md5"/>
+            <sec:jdbc-user-service data-source-ref="dataSource"
+                users-by-username-query="SELECT username, password, enable, last_login_at FROM tbl_users users WHERE username=?"
+                authorities-by-username-query="SELECT users.username, authorities.name AS authority FROM tbl_users users INNER JOIN tbl_authorities authorities ON users.id_authority=authorities.id_authority WHERE username=?"
+            />
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+    <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+        <beans:property name="exceptionMappings">
+            <beans:props>
+                <beans:prop key="org.springframework.security.authentication.BadCredentialsException">/login.jsf?bad_credentials=true</beans:prop>
+                <beans:prop key="org.springframework.security.authentication.CredentialsExpiredException">/login.jsf?credentials_expired=true</beans:prop>
+                <beans:prop key="org.springframework.security.authentication.LockedException">/login.jsf?locked=true</beans:prop>
+                <beans:prop key="org.springframework.security.authentication.DisabledException">/login.jsf?disabled=true</beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
+</beans:beans>

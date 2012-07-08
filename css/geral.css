@@ -1,0 +1,313 @@
+/* General css */
+html,body {
+	height: 100%;
+}
+
+table {
+	
+}
+
+input[readonly]{
+    background-color: #ffffff !important;
+    cursor: default !important;
+}
+
+/* Primefaces css */
+.ui-datatable-resizable {
+	overflow: hidden !important;
+}
+
+.ui-state-default {
+	border: 0px !important;
+}
+
+.ui-widget {
+	font-size: 12px !important;
+}
+
+.ui-widget-header,th.ui-state-default {
+	background: #EEE !important;
+	border: 0px !important;
+}
+
+.ui-datatable {
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border: 1px solid #A8A8A8;
+}
+
+.ui-datatable-data td {
+	border-width: 0px !important;
+	border-style: none !important;
+	border-bottom-width: 1px !important;
+	border-bottom-style: solid !important;
+	border-bottom-color: #A8A8A8 !important;
+	border-top-width: 1px !important;
+	border-top-style: solid !important;
+	border-top-color: #A8A8A8 !important;
+}
+
+.ui-widget-content {
+	border: 0px !important;
+}
+
+.ui-column-resizer{
+     height: 29px !important;
+ }
+
+.ui-column-filter{
+    display: inline !important;
+    padding: 1px !important;
+    margin-left: 3px !important;
+}
+
+.ui-state-focus{
+    font-weight: normal !important;
+    background: #ffffff !important;
+}
+
+a.ui-state-default{
+    color:#4F4F4F !important;
+}
+
+.ui-blockui{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Primefaces css */
+
+.hero-unit {
+	padding: 16px !important;
+	margin-bottom: 0px !important;
+}
+
+.hero-unit h1 {
+	font-size: 30px !important;
+}
+
+.wrapper {
+	min-height: 100% !important;
+	height: auto !important;
+	height: 100% !important;
+	margin: 0 auto -63px !important;
+}
+
+.wrapper>.container {
+	padding-top: 30px !important;
+}
+
+.center {
+	text-align: center !important;
+}
+
+.left {
+    text-align: left !important;
+}
+
+.right {
+    text-align: right !important;
+}
+.hide {
+	display: none;
+}
+
+.list-msg {
+	margin-bottom: -10px !important;
+	margin-top: -10px !important;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.form-options{
+	margin: 0px !important;
+}
+
+.btn-new{
+	width: 45px !important;
+	text-align: left !important;
+}
+
+.btn-create{
+    width: 55px !important;
+    text-align: left !important;
+}
+
+.btn-update{
+    width: 70px !important;
+    text-align: left !important;
+}
+
+.btn-email, .btn-remission{
+	margin-right: 3px !important;
+}
+
+.btn-delete{
+	margin-left: 3px !important;
+}
+
+.btn-no{
+    margin-left: 10px !important;
+}
+
+.white{
+    color: #ffffff !important;
+}
+
+.icon-option{
+    padding: 1px 2px 3px !important;
+}
+
+.option-column{
+    width: 70px !important;
+}
+
+.option-user-column{
+    width: 80px !important;
+}
+
+.option-prisoner-column{
+    width: 80px !important;
+}
+
+.option-column, .option-user-column, option-prisoner-column{
+    text-align:center !important;
+    border: #000000 solid 1px !important;
+}
+
+.group-three-links{
+    width: 67px !important;
+}
+
+.group-four-links{
+    width: 90px !important;
+}
+
+.input-name-filter, .input-authority-filter, .input-email-filter,
+.input-municipality-filter, .input-prisoner-filter, .input-table_name-filter{
+    padding: 0px !important;
+    width: 130px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.input-capacity-filter, .input-stocking-filter,
+.input-effective-filter, .input-time_penalty-filter,
+.input-workload-filter{
+    padding: 0px !important;
+    width: 50px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.input-registration_criminal-filter, .input-sex-filter,
+.input-race-filter, .input-undertaking-filter, .input-prison_unit-filter,
+.input-username-filter, .input-ip-filter, .input-operation-filter{
+    padding: 0px !important;
+    width: 100px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.input-date-filter{
+    padding: 0px !important;
+    width: 70px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.select-enable-filter, .select-authority-filter, .select-operation-filter{
+    padding: 0px !important;
+    height: 20px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.select-table_name-filter{
+    padding: 0px !important;
+    width: 160px !important;
+    height: 20px !important;
+    margin-left: 3px !important;
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+}
+
+.select-operation-filter{
+    width: 110px !important;
+}
+
+.select-authority-filter{
+    width: 110px !important;
+}
+
+.select-enable-filter{
+    width: 80px !important;
+}
+
+.btn-clear-calendar{
+    margin-bottom: 5px !important;
+}
+
+#dataTable{
+    overflow-x: auto !important;
+    width: 100% !important;
+    padding: 0px 1px 0px 0px;
+}
+
+.form-popup{
+    margin-top: 10px;
+}
+
+.btn-right{
+    margin-left: 60px !important;
+}
+
+.grid-form{
+    width: 100% !important;
+}
+
+.grid-form-td{
+    width: 50% !important;
+}
+
+.login-form-td{
+    width: 80px !important;
+}
+
+input, select, label {
+    font-size: 12px !important;
+}
+
+.table tbody tr:hover td, .table tbody tr:hover th {
+    background-color: whiteSmoke;
+}
+
+.table-details{
+    margin-top: 10px !important;
+    font-size: 11px !important;
+}
+
+.font-print{
+    font-size: 11px !important;
+}
+
+.forgot-password{
+    font-size: 11px !important;
+    margin-left: 10px;
+    cursor: pointer !important;
+}
+
+.table-form{
+    margin-top: 15px !important;
+}

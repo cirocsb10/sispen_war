@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/default.xhtml">
+
+    <ui:define name="title">
+        <h1>Usuários</h1>
+    </ui:define>
+
+    <ui:define name="button-new">
+        <h:form styleClass="form-options">
+            <p:commandLink styleClass="btn btn-new" oncomplete="dlg.show()" action="#{userController.create}" update=":dialog">
+                <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Novo" styleClass="icon-file"/>
+            </p:commandLink>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="list-msg">
+        <h:panelGroup id="list-msg-info" layout="block" class="alert alert-success center hide list-msg">
+            <strong>Informação:  </strong>
+            <h:outputText id="msg-info" value="" />
+        </h:panelGroup>
+
+        <h:panelGroup id="list-msg-warn" layout="block" class="alert alert-error center hide list-msg">
+            <strong>Atenção:  </strong>
+            <h:outputText id="msg-warn" value="" />
+        </h:panelGroup>
+    </ui:define>
+
+    <ui:define name="table-content">
+
+        <p:dataTable id="dataTable"
+                     styleClass="table"
+                     lazy="true"
+                     filterEvent="enter"
+                     var="model"
+                     value="#{userController.users}"
+                     resizableColumns="true"
+                     paginator="true"
+                     rows="10"
+                     rowKey="#{model.id}"
+                     paginatorPosition="bottom"
+                     tableStyle="width:100%"
+                     emptyMessage="Sua busca não retornou resultados"
+                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+
+            <p:column id="name" headerText="Usuário:" filterBy="#{model.username}">
+                <h:outputText value="#{model.username}" />
+            </p:column>
+
+            <p:column id="email" headerText="Email:" filterBy="#{model.email}">
+                <h:outputText value="#{model.email}" />
+            </p:column>
+
+            <p:column id="authority" headerText="Perfil:" filterBy="#{model.authority.description}">
+                <h:outputText value="#{model.authority.description}" />
+            </p:column>
+
+            <p:column id="enable" headerText="Ativo:" filterBy="#{model.enable}" styleClass="center" filterOptions="#{userController.authorityOptions}">
+                <h:outputText value="Sim" rendered="#{model.enable}" />
+                <h:outputText value="Não" rendered="#{!model.enable}" />
+            </p:column>
+
+            <p:column id="numberOfAccesses" styleClass="center" headerText="Acessos">
+                <h:outputText value="#{model.numberOfAccesses}" />
+            </p:column>
+
+            <p:column headerText="Opções" resizable="false" styleClass="option-user-column">
+                <h:form styleClass="form-options">
+                    <div class="group-three-links">
+                        <p:commandLink styleClass="btn btn-email icon-option" onclick="emailConfirmation.show()" title="Reenviar email">
+                            <h:outputText value="" styleClass="icon-envelope"/>
+                            <f:setPropertyActionListener target="#{userController.user}" value="#{model}" />
+                        </p:commandLink>
+
+                        <p:commandLink styleClass="btn btn-edit icon-option" oncomplete="dlg.show()" action="#{userController.edit(model.id)}" update=":dialog" title="Editar">
+                            <h:outputText value="" styleClass="icon-edit"/>
+                            <f:setPropertyActionListener target="#{userController.user}" value="#{model}" />
+                        </p:commandLink>
+
+                        <p:commandLink styleClass="btn btn-delete icon-option" onclick="deleteConfirmation.show()" title="Excluir">
+                            <h:outputText value="" styleClass="icon-trash"/>
+                            <f:setPropertyActionListener target="#{userController.user}" value="#{model}" />
+                        </p:commandLink>
+                    </div>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+
+        <p:blockUI block="dataTable" trigger="dataTable">
+            LOADING<br />
+            <p:graphicImage value="/img/ajax-loader.gif"/>
+        </p:blockUI>
+
+        <h:form prependId="false">
+            <p:confirmDialog id="deleteConfirmDialog" message="Você deseja realmente excluir o registro?" header="Exclusão de Registro" severity="alert" widgetVar="deleteConfirmation">
+                <p:commandLink id="confirm" styleClass="btn btn-primary white" value="Sim" update=":dataTable" oncomplete="handleRequest(xhr, status, args); deleteConfirmation.hide()" action="#{userController.delete}" />
+                <p:commandLink id="decline" styleClass="btn btn-no" value="Não" onclick="deleteConfirmation.hide()" type="button" />
+            </p:confirmDialog>
+        </h:form>
+
+        <h:form prependId="false">
+            <p:confirmDialog id="emailConfirmDialog" message="Uma nova senha será criada. Continuar?" header="Envio de Email" severity="alert" widgetVar="emailConfirmation">
+                <p:commandLink id="confirm-email" styleClass="btn btn-primary white" value="Sim" update=":dataTable" oncomplete="handleRequest(xhr, status, args); emailConfirmation.hide()" action="#{userController.notifyUser}" />
+                <p:commandLink id="decline-email" styleClass="btn btn-no" value="Não" onclick="emailConfirmation.hide()" type="button" />
+            </p:confirmDialog>
+        </h:form>
+
+        <p:dialog id="dialog" header="Cadastro" closable="false" modal="true" draggable="false" resizable="false" width="355" widgetVar="dlg">
+            <h:panelGroup id="dialog-msg" layout="block" styleClass="dialog-msg alert alert-error center hide">
+                <strong>Atenção:  </strong>
+                <h:outputText id="msg-error" styleClass="msg-error" value="" />
+            </h:panelGroup>
+
+            <h:form id="form-register" class="form-popup">
+                <h:panelGrid id="grid-form" columns="3" cellpadding="5">
+                    <h:outputLabel styleClass="right" for="j_name" value="Usuário: *" />
+                    <h:inputText id="j_name" value="#{userController.user.username}" maxlength="8" />
+                    <p:watermark for="j_name" value="Digite o usuário"/>
+
+                    <h:outputLabel styleClass="right" for="j_email" value="Email: *" />
+                    <h:inputText id="j_email" value="#{userController.user.email}" maxlength="30" />
+                    <p:watermark for="j_email" value="Digite o email"/>
+
+                    <h:outputLabel styleClass="right" for="j_authority" value="Perfil: *" />
+                    <h:selectOneMenu id="j_authority" value="#{userController.user.authority}">
+                        <f:selectItem itemLabel="Selecione" itemValue="0" />
+                        <f:selectItems value="#{userController.authorities}" />
+                        <f:converter converterId="authorityConverter" />
+                    </h:selectOneMenu>
+                    <p:watermark for="j_authority" value=""/>
+
+                    <h:outputLabel styleClass="right" for="j_enable" value="Habilitado: *" />
+                    <h:selectBooleanCheckbox id="j_enable" value="#{userController.user.enable}" />
+                    <p:watermark for="j_enable" value=""/>
+
+                    <p:commandLink id="btn-create" styleClass="btn btn-create btn-submit btn-primary" action="#{userController.save}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                        <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Salvar" styleClass="icon-ok icon-white white"/>
+                    </p:commandLink>
+
+                    <p:commandLink id="btn-cancel" styleClass="btn btn-cancel" action="#{userController.cancel}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                        <h:outputText value="Cancelar"/>
+                    </p:commandLink>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>
+</html>

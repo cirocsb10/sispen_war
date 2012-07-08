@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/default.xhtml">
+
+    <ui:define name="title">
+        <h1>Prisioneiros</h1>
+    </ui:define>
+
+    <ui:define name="table-content">
+
+        <h:panelGroup id="dialog-msg" layout="block" styleClass="dialog-msg alert alert-error center hide">
+            <strong>Atenção:  </strong>
+            <h:outputText id="msg-error" styleClass="msg-error" value="" />
+        </h:panelGroup>
+
+        <f:metadata>
+            <f:viewParam name="id" value="#{prisonerController.prisoner}" />
+        </f:metadata>
+
+        <h:form id="form-register">
+
+            <h:inputHidden id="prisoner_id" value="#{prisonerController.prisoner.id}"/>
+
+            <div class="accordion" id="accordion2">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                            Dados Pessoais
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
+                        <div class="accordion-inner">
+                            <table id="grid-form" cellpadding="2" class="grid-form" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td class="right grid-form-td"><h:outputLabel for="j_registrationCriminal" value="Matrícula Penal: *" /></td>
+                                        <td><h:inputText id="j_registrationCriminal" value="#{prisonerController.prisoner.registrationCriminal}" maxlength="10" /></td>
+                                        <td><p:watermark for="j_registrationCriminal" value="Digite a matrícula"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_name" value="Nome: *" /></td>
+                                        <td><h:inputText id="j_name" value="#{prisonerController.prisoner.name}" maxlength="50" /></td>
+                                        <td><p:watermark for="j_name" value="Digite o nome"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_dateOfBirth" value="Data de Nascimento: *" /></td>
+                                        <td><p:calendar id="j_dateOfBirth" value="#{prisonerController.prisoner.dateOfBirth}" navigator="true" pattern="dd/MM/yyyy" yearRange="-111:+2" readonlyInput="true" /></td>
+                                        <td><p:watermark for="j_dateOfBirth" value="Digite a data de nascimento"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_cpf" value="Cpf: " /></td>
+                                        <td><h:inputText id="j_cpf" value="#{prisonerController.prisoner.cpf}" styleClass="cpf" maxlength="14" /></td>
+                                        <td><p:watermark for="j_cpf" value="Digite o cpf"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_rg" value="Rg: " /></td>
+                                        <td><h:inputText id="j_rg" value="#{prisonerController.prisoner.rg}" maxlength="12" /></td>
+                                        <td><p:watermark for="j_rg" value="Digite o rg"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_motherName" value="Nome da mãe: *" /></td>
+                                        <td><h:inputText id="j_motherName" value="#{prisonerController.prisoner.motherName}" maxlength="50" /></td>
+                                        <td><p:watermark for="j_motherName" value="Digite o nome da mãe"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_placeOfBirth" value="Naturalidade: *" /></td>
+                                        <td><h:inputText id="j_placeOfBirth" value="#{prisonerController.prisoner.placeOfBirth}" maxlength="30" /></td>
+                                        <td><p:watermark for="j_placeOfBirth" value="Digite a naturalidade"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_maritalStatus" value="Estado civil: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_maritalStatus" value="#{prisonerController.prisoner.maritalStatus}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="" />
+                                                <f:selectItems value="#{prisonerController.maritalStatus}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_maritalStatus" value="Digite o estado civil"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_sex" value="Sexo: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_sex" value="#{prisonerController.prisoner.sex}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="" />
+                                                <f:selectItems value="#{prisonerController.sexes}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_sex" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_numberOfDependents" value="Nº Dependentes: " /></td>
+                                        <td><h:inputText id="j_numberOfDependents" styleClass="numeric" value="#{prisonerController.prisoner.numberOfDependents}" maxlength="30" /></td>
+                                        <td><p:watermark for="j_numberOfDependents" value="Digite o nº de dependentes"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right grid-form-td"><h:outputLabel for="j_race" value="Raça: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_race" value="#{prisonerController.prisoner.race}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.races}" />
+                                                <f:converter converterId="raceConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_race" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_sexualOrientation" value="Orientação Sexual: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_sexualOrientation" value="#{prisonerController.prisoner.sexualOrientation}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.sexualOrientations}" />
+                                                <f:converter converterId="sexualOrientationConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_sexualOrientation" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_handicap" value="Deficiência Física: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_handicap" value="#{prisonerController.prisoner.handicap}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.handicaps}" />
+                                                <f:converter converterId="handicapConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_handicap" value=""/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                            Formação
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="accordion-body in collapse" style="height: 0px; ">
+                        <div class="accordion-inner">
+                            <table id="grid-form-4" cellpadding="2" class="grid-form" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td class="right grid-form-td"><h:outputLabel for="j_academicFormation" value="Formação Acadêmica: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_academicFormation" value="#{prisonerController.prisoner.academicFormation}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.academicFormations}" />
+                                                <f:converter converterId="academicFormationConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_academicFormation" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_languages" value="Idiomas (Pressione CTRL ao selecionar): " /></td>
+                                        <td>
+                                            <h:selectManyListbox id="j_languages" size="5" collectionType="java.util.HashSet" value="#{prisonerController.prisoner.languages}" >
+                                                <f:selectItems value="#{prisonerController.languages}" />
+                                                <f:converter converterId="languageConverter" />
+                                            </h:selectManyListbox>
+                                        </td>
+                                        <td><p:watermark for="j_languages" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_courses" value="Cursos (Pressione CTRL ao selecionar): " /></td>
+                                        <td>
+                                            <h:selectManyListbox id="j_courses" size="5" collectionType="java.util.HashSet" value="#{prisonerController.prisoner.courses}" >
+                                                <f:selectItems value="#{prisonerController.courses}" />
+                                                <f:converter converterId="courseConverter" />
+                                            </h:selectManyListbox>
+                                        </td>
+                                        <td><p:watermark for="j_courses" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_drivingLicence" value="Habilitação: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_drivingLicence" value="#{prisonerController.prisoner.drivingLicence}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.drivingLicences}" />
+                                                <f:converter converterId="drivingLicenceConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_drivingLicence" value=""/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                            Execução Penal
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body in collapse" style="height: auto; ">
+                        <div class="accordion-inner">
+                            <table id="grid-form-2" cellpadding="2" class="grid-form" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td class="right grid-form-td"><h:outputLabel for="j_entryDate" value="Data de entrada: *" /></td>
+                                        <td><p:calendar id="j_entryDate" value="#{prisonerController.prisoner.entryDate}" navigator="true" pattern="dd/MM/yyyy" yearRange="-111:+2" readonlyInput="true" /></td>
+                                        <td><p:watermark for="j_entryDate" value="Digite a data de entrada"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_timePenalty" value="Tempo de pena (meses): *" /></td>
+                                        <td><h:inputText id="j_timePenalty" styleClass="numeric" value="#{prisonerController.prisoner.timePenalty}" maxlength="3" /></td>
+                                        <td><p:watermark for="j_timePenalty" value="Digite o tempo de pena"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_prisonUnit" value="Unidade Prisional: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_prisonUnit" value="#{prisonerController.prisoner.prisonUnit}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.prisonUnits}" />
+                                                <f:converter converterId="prisonUnitConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_prisonUnit" value=""/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                            Dados Profissionais
+                        </a>
+                    </div>
+                    <div id="collapseFour" class="accordion-body in collapse" style="height: 0px; ">
+                        <div class="accordion-inner">
+                            <table id="grid-form-3" cellpadding="2" class="grid-form" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_profession" value="Profissão: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_profession" value="#{prisonerController.prisoner.profession}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.professions}" />
+                                                <f:converter converterId="professionConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_profession" value=""/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_experience" value="Experiência (meses): " /></td>
+                                        <td><h:inputText id="j_experience" styleClass="numeric" value="#{prisonerController.prisoner.experience}" maxlength="30" /></td>
+                                        <td><p:watermark for="j_experience" value="Digite o tempo de experiência"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="right"><h:outputLabel for="j_intendedOccupation" value="Profissão Pretendida: *" /></td>
+                                        <td>
+                                            <h:selectOneMenu id="j_intendedOccupation" value="#{prisonerController.prisoner.intendedOccupation}">
+                                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                                <f:selectItems value="#{prisonerController.professions}" />
+                                                <f:converter converterId="professionConverter" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td><p:watermark for="j_intendedOccupation" value=""/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table id="grid-form-5" cellpadding="2" class="grid-form" border="0">
+                <tbody>
+                    <tr>
+                        <td class="right grid-form-td">
+                            <p:commandLink id="btn-create" styleClass="btn btn-create btn-submit btn-primary top" action="#{prisonerController.save}" oncomplete="handleRequest(xhr, status, args)">
+                                <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Salvar" styleClass="icon-ok icon-white white"/>
+                            </p:commandLink>
+
+                        </td>
+                        <td>
+                            <p:commandLink id="btn-cancel" styleClass="btn btn-cancel" action="list?faces-redirect=true">
+                                <h:outputText value="Cancelar"/>
+                            </p:commandLink>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </h:form>
+
+        <!-- Validation client-side numeric fields -->
+        <script type="text/javascript">
+            $('.numeric').numeric();
+            $('.cpf').mask("999.999.999-99");
+            $('input').removeClass('ui-inputfield ui-widget ui-state-default ui-corner-all');
+        </script>
+        <!-- Validation client-side numeric fields -->
+
+    </ui:define>
+
+</ui:composition>
+</html>

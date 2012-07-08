@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/default.xhtml">
+
+    <ui:define name="title">
+        <h1>Auditoria de Dados</h1>
+    </ui:define>
+
+    <ui:define name="button-new">
+        <h:form styleClass="form-options"></h:form>
+    </ui:define>
+
+    <ui:define name="list-msg">
+
+    </ui:define>
+
+    <ui:define name="table-content">
+
+        <p:dataTable id="dataTable"
+                     styleClass="table"
+                     lazy="true"
+                     filterEvent="enter"
+                     var="model"
+                     value="#{auditController.auditOperations}"
+                     resizableColumns="true"
+                     paginator="true"
+                     rows="10"
+                     rowKey="#{model.id}"
+                     paginatorPosition="bottom"
+                     tableStyle="width:100%"
+                     emptyMessage="Sua busca não retornou resultados"
+                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+
+            <p:column id="table_name" headerText="Tabela:" filterBy="#{model.tableName}" filterOptions="#{auditController.tableNames}">
+                <h:outputText value="#{model.tableName}" />
+            </p:column>
+
+            <p:column id="username" headerText="Usuário:" filterBy="#{model.username}">
+                <h:outputText value="#{model.username}" />
+            </p:column>
+
+            <p:column id="ip" headerText="Endereço IP:" filterBy="#{model.remoteAddress}">
+                <h:outputText value="#{model.remoteAddress}" />
+            </p:column>
+
+            <p:column id="operation" headerText="Operação:" filterBy="#{model.operation}" filterOptions="#{auditController.operationNames}">
+                <h:outputText value="#{model.operation}" />
+            </p:column>
+
+            <p:column id="created_at" headerText="Criado em:" filterBy="#{model.createdAt}" styleClass="center">
+                <h:outputText value="#{model.createdAt}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Opções" resizable="false" styleClass="option-column">
+                <h:form styleClass="form-options">
+                    <p:commandLink styleClass="btn btn-edit icon-option" oncomplete="dlg.show()" action="#{auditController.details(model)}" update=":dialog" title="Detalhes">
+                        <h:outputText value="" styleClass="icon-list-alt"/>
+                        <f:setPropertyActionListener target="#{auditController.auditOperation}" value="#{model}" />
+                    </p:commandLink>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+
+        <p:blockUI block="dataTable" trigger="dataTable">
+            LOADING<br />
+            <p:graphicImage value="/img/ajax-loader.gif"/>
+        </p:blockUI>
+
+        <p:dialog id="dialog" header="Detalhes" closable="true" modal="true" draggable="false" resizable="false" width="500" widgetVar="dlg">
+            <p:dataTable id="dataTableDetails"
+                         styleClass="table table-details"
+                         var="model"
+                         value="#{auditController.auditDetails}"
+                         resizableColumns="true"
+                         rowKey="#{model.id}"
+                         tableStyle="width:100%">
+
+                <p:column id="column_name" headerText="Coluna" styleClass="left">
+                    <h:outputText value="#{model.columnName}" />
+                </p:column>
+
+                <p:column id="old_value" headerText="Valor anterior" styleClass="left">
+                    <h:outputText value="#{model.oldValue}" />
+                </p:column>
+
+                <p:column id="current_value" headerText="Valor atual" styleClass="left">
+                    <h:outputText value="#{model.currentValue}" />
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>
+</html>

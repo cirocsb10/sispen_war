@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition template="/pages/templates/default.xhtml">
+
+    <ui:define name="title">
+        <h1>Municípios</h1>
+    </ui:define>
+
+    <ui:define name="button-new">
+        <h:form styleClass="form-options">
+            <p:commandLink styleClass="btn btn-new" oncomplete="dlg.show()" action="#{municipalityController.create}" update=":dialog">
+                <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Novo" styleClass="icon-file"/>
+            </p:commandLink>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="list-msg">
+        <h:panelGroup id="list-msg-info" layout="block" class="alert alert-success center hide list-msg">
+            <strong>Informação:  </strong>
+            <h:outputText id="msg-info" value="" />
+        </h:panelGroup>
+
+        <h:panelGroup id="list-msg-warn" layout="block" class="alert alert-error center hide list-msg">
+            <strong>Atenção:  </strong>
+            <h:outputText id="msg-warn" value="" />
+        </h:panelGroup>
+    </ui:define>
+
+    <ui:define name="table-content">
+
+        <p:dataTable id="dataTable"
+                     styleClass="table"
+                     lazy="true"
+                     filterEvent="enter"
+                     var="model"
+                     value="#{municipalityController.municipalities}"
+                     resizableColumns="true"
+                     paginator="true"
+                     rows="10"
+                     rowKey="#{model.id}"
+                     paginatorPosition="bottom"
+                     tableStyle="width:100%"
+                     emptyMessage="Sua busca não retornou resultados"
+                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+
+            <p:column id="name" headerText="Município:" filterBy="#{model.name}">
+                <h:outputText value="#{model.name}" />
+            </p:column>
+
+            <p:column headerText="Opções" resizable="false" styleClass="option-column">
+                <h:form styleClass="form-options">
+                    <p:commandLink styleClass="btn btn-edit icon-option" oncomplete="dlg.show()" action="#{municipalityController.edit(model.id)}" update=":dialog" title="Editar">
+                        <h:outputText value="" styleClass="icon-edit"/>
+                        <f:setPropertyActionListener target="#{municipalityController.municipality}" value="#{model}" />
+                    </p:commandLink>
+
+                    <p:commandLink styleClass="btn btn-delete icon-option" onclick="deleteConfirmation.show()" title="Excluir">
+                        <h:outputText value="" styleClass="icon-trash"/>
+                        <f:setPropertyActionListener target="#{municipalityController.municipality}" value="#{model}" />
+                    </p:commandLink>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+
+        <p:blockUI block="dataTable" trigger="dataTable">
+            LOADING<br />
+            <p:graphicImage value="/img/ajax-loader.gif"/>
+        </p:blockUI>
+
+        <h:form prependId="false">
+            <p:confirmDialog id="deleteConfirmDialog" message="Você deseja realmente excluir o registro?" header="Exclusão de Registro" severity="alert" widgetVar="deleteConfirmation">
+                <p:commandLink id="confirm" styleClass="btn btn-primary white" value="Sim" update=":dataTable" oncomplete="handleRequest(xhr, status, args); deleteConfirmation.hide()" action="#{municipalityController.delete}" />
+                <p:commandLink id="decline" styleClass="btn btn-no" value="Não" onclick="deleteConfirmation.hide()" type="button" />
+            </p:confirmDialog>
+        </h:form>
+
+        <p:dialog id="dialog" header="Cadastro" closable="false" modal="true" draggable="false" resizable="false" width="355" widgetVar="dlg">
+            <h:panelGroup id="dialog-msg" layout="block" styleClass="dialog-msg alert alert-error center hide">
+                <strong>Atenção:  </strong>
+                <h:outputText id="msg-error" styleClass="msg-error" value="" />
+            </h:panelGroup>
+
+            <h:form id="form-register">
+                <h:panelGrid id="grid-form" columns="3" cellpadding="5">
+                    <h:outputLabel for="j_name" value="Nome: *" />
+                    <h:inputText id="j_name" value="#{municipalityController.municipality.name}" maxlength="30" />
+                    <p:watermark for="j_name" value="Digite o município"/>
+
+                    <p:commandLink id="btn-create" styleClass="btn btn-create btn-submit btn-primary" action="#{municipalityController.save}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                        <h:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;Salvar" styleClass="icon-ok icon-white white"/>
+                    </p:commandLink>
+
+                    <p:commandLink id="btn-cancel" styleClass="btn btn-cancel" action="#{municipalityController.cancel}" update=":dataTable" oncomplete="handleRequest(xhr, status, args)">
+                        <h:outputText value="Cancelar"/>
+                    </p:commandLink>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>
+</html>
