@@ -13,5 +13,11 @@
 			<h1>Último login em: #{SPRING_SECURITY_CONTEXT.authentication.principal.lastLoginAt} - [#{SPRING_SECURITY_CONTEXT.authentication.details.remoteAddress}]</h1>
         </ui:define>
 
+        <ui:define name="table-content">
+
+            <div style="height: 200px"></div>
+
+        </ui:define>
+
 	</ui:composition>	
 </html>
